@@ -1,4 +1,4 @@
-import { fromEvent, zip } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 
 const input = document.querySelector('input');
