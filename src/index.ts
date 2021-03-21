@@ -1,9 +1,23 @@
-import { of, from } from 'rxjs';
+import { fromEvent, zip } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 
-const o = of(5) // Promise.resolve(5)
+const input = document.querySelector('input');
 
-o.subscribe({
-  next: (value: any) => console.log('Next:', value),
-  complete: () => console.log('Complete!'),
-  error: (error) => console.log('Error!', error)
-})
+const observable = fromEvent(input, 'input');
+
+const fetchUrl = (url: string) => switchMap((event: KeyboardEvent) =>
+  fetch(`${url}${(event.target as HTMLInputElement).value}`)
+    .then(response => response.json())
+);
+
+observable.pipe(
+  debounceTime(500),
+  switchMap((event: KeyboardEvent) =>
+    fetch(`https://gitlab.com/api/v4/projects?search=${(event.target as HTMLInputElement).value}`)
+      .then(response => response.json())
+  )
+).subscribe(
+  response => {
+    console.log(response.length);
+  }
+);
