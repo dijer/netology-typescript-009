@@ -5,11 +5,6 @@ const input = document.querySelector('input');
 
 const observable = fromEvent(input, 'input');
 
-const fetchUrl = (url: string) => switchMap((event: KeyboardEvent) =>
-  fetch(`${url}${(event.target as HTMLInputElement).value}`)
-    .then(response => response.json())
-);
-
 observable.pipe(
   debounceTime(500),
   switchMap((event: KeyboardEvent) =>
